@@ -102,7 +102,7 @@ function resolveBattle(army: { id: string; fromCityId: string; toCityId: string;
           ownerId: army.ownerId,
           troops: surviving,
           population: newPop,
-          maxTroops: Math.floor(newPop * 0.3),
+          maxTroops: Math.floor(newPop * 0.2 + Math.floor(tc.defense * 0.3) * 1.0),
           defense: Math.floor(tc.defense * 0.3),
           loyalty: 40
         }}
@@ -168,7 +168,7 @@ export function advanceTick() {
       const pBonus = faction.farmBonusActive ? 0.005 : 0;
       city.population = Math.floor(city.population * (1 + rpBase + pBonus));
     }
-    city.maxTroops = Math.floor(city.population * 0.3);
+    city.maxTroops = Math.floor(city.population * 0.2 + city.defense * 1.0);
 
     const governor = faction.officers.find(o => o.assignedCityId === city.id);
     const governorIntBonus = governor ? governor.intelligence / 100 : 0;

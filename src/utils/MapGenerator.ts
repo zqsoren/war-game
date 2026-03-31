@@ -94,7 +94,7 @@ export function generateWorld() {
       name: `邑${rc.id.split('_')[1]}`,
       population: rebelPop,
       troops: Math.floor(rebelPop * 0.05),
-      maxTroops: Math.floor(rebelPop * 0.3),
+      maxTroops: Math.floor(rebelPop * 0.2 + 2000 * 1.0),
       defense: 2000,
       maxDefense: 2000,
       loyalty: 100,
@@ -143,7 +143,7 @@ export function generateWorld() {
       const pop = getRandomInt(10000, 50000);
       citiesObj[curId].population = pop;
       citiesObj[curId].troops = Math.floor(pop * (getRandomInt(5, 15) / 100));
-      citiesObj[curId].maxTroops = Math.floor(pop * 0.3);
+      citiesObj[curId].maxTroops = Math.floor(pop * 0.2 + citiesObj[curId].defense * 1.0);
       citiesObj[curId].loyalty = 100;
       factionsObj[fDef.id].treasury += getRandomInt(5000, 20000);
       

@@ -501,7 +501,7 @@ export const useWorldStore = create<WorldState>((set, get) => ({
       if (drafted > 0) {
         newCity.population -= drafted;
         newCity.troops += drafted;
-        newCity.maxTroops = Math.floor(newCity.population * 0.3);
+        newCity.maxTroops = Math.floor(newCity.population * 0.2 + newCity.defense * 1.0);
         newCity.loyalty = Math.max(0, newCity.loyalty - 15);
         get().addLog({ eraYear: state.eraYear, eraMonth: state.eraMonth, message: `${city.name} 强制征兵 ${drafted.toLocaleString()} 人，百姓怨声载道。`, type: 'military' });
       }
