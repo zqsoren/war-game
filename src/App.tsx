@@ -21,7 +21,6 @@ function App() {
   const mapViewMode = useWorldStore(state => state.mapViewMode);
   const marchingArmies = useWorldStore(state => state.marchingArmies);
   const saveGame = useWorldStore(state => state.saveGame);
-  const loadGame = useWorldStore(state => state.loadGame);
   const diplomaticEvents = useWorldStore(state => state.diplomaticEvents);
 
   const pendingEvents = diplomaticEvents.filter(e => e.toFactionId === 'F_PLAYER' && e.status === 'pending');
