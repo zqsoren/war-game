@@ -26,9 +26,12 @@ function App() {
   const pendingEvents = diplomaticEvents.filter(e => e.toFactionId === 'F_PLAYER' && e.status === 'pending');
 
   useEffect(() => {
-    localStorage.removeItem('darkflow_save');
-    const { cities, factions } = generateWorld();
-    useWorldStore.getState().initWorld(cities, factions);
+    // 尝试加载本地存档，如果没有或加载失败，则生成新世界
+    const loadSuccess = useWorldStore.getState().loadGame();
+    if (!loadSuccess) {
+      const { cities, factions } = generateWorld();
+      useWorldStore.getState().initWorld(cities, factions);
+    }
     setInitialized(true);
 
     startTickEngine();
