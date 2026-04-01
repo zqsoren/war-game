@@ -8,14 +8,14 @@ const POINT_COUNT = 300; // 较多的点以产生细致的地块
 
 const FACTIONS = [
   { id: 'F_PLAYER', name: '玩家(大楚)', color: '#FF3333', isPlayer: true, targetCount: 10 },
-  { id: 'F_AI1', name: '赵', color: '#3355FF', isPlayer: false, targetCount: 20 },
-  { id: 'F_AI2', name: '宋', color: '#11AA66', isPlayer: false, targetCount: 15 },
-  { id: 'F_AI3', name: '钱', color: '#DDAA11', isPlayer: false, targetCount: 25 },
-  { id: 'F_AI4', name: '明', color: '#AA33AA', isPlayer: false, targetCount: 18 },
-  { id: 'F_AI5', name: '越', color: '#33AADD', isPlayer: false, targetCount: 12 },
-  { id: 'F_AI6', name: '秦', color: '#111111', isPlayer: false, targetCount: 30 },
-  { id: 'F_AI7', name: '齐', color: '#FF8833', isPlayer: false, targetCount: 15 },
-  { id: 'F_AI8', name: '燕', color: '#888888', isPlayer: false, targetCount: 15 },
+  { id: 'F_AI1', name: '赵', color: '#3355FF', isPlayer: false, targetCount: 35 },
+  { id: 'F_AI2', name: '宋', color: '#11AA66', isPlayer: false, targetCount: 25 },
+  { id: 'F_AI3', name: '钱', color: '#DDAA11', isPlayer: false, targetCount: 40 },
+  { id: 'F_AI4', name: '明', color: '#AA33AA', isPlayer: false, targetCount: 30 },
+  { id: 'F_AI5', name: '越', color: '#33AADD', isPlayer: false, targetCount: 8 },
+  { id: 'F_AI6', name: '秦', color: '#222222', isPlayer: false, targetCount: 35 },
+  { id: 'F_AI7', name: '齐', color: '#FF8833', isPlayer: false, targetCount: 20 },
+  { id: 'F_AI8', name: '燕', color: '#888888', isPlayer: false, targetCount: 5 },
 ];
 
 function getRandomInt(min: number, max: number) {
@@ -65,10 +65,10 @@ export function generateWorld() {
     // 地形生成 (以缩放噪声映射)
     const nv = noise2D(x / 300, y / 300); // -1 to 1
     let terrain: TerrainType = 'grass';
-    if (nv < -0.3) terrain = 'water';
-    else if (nv < -0.15) terrain = 'sand';
-    else if (nv < 0.2) terrain = 'grass';
-    else if (nv < 0.5) terrain = 'forest';
+    if (nv < -0.55) terrain = 'water';      // 大幅减少水域
+    else if (nv < -0.35) terrain = 'sand';
+    else if (nv < 0.15) terrain = 'grass';
+    else if (nv < 0.45) terrain = 'forest';
     else terrain = 'mountain';
     
     rawCities.push({
