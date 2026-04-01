@@ -120,6 +120,7 @@ export interface WorldState {
   addLog: (log: Omit<GameLog, 'id' | 'timestamp'>) => void;
   setSelectedCity: (cityId: string | null) => void;
   setMapViewMode: (mode: 'political' | 'terrain') => void;
+  renameCity: (cityId: string, newName: string) => void;
   updatePolicy: (factionId: string, updates: Partial<Faction>) => void;
   cityAction: (cityId: string, actionType: 'relief' | 'repair' | 'forceDraft') => void;
 
@@ -224,6 +225,14 @@ export const useWorldStore = create<WorldState>((set, get) => ({
 
   setSelectedCity: (id) => set({ selectedCityId: id }),
   setMapViewMode: (mode) => set({ mapViewMode: mode }),
+
+  renameCity: (cityId, newName) => set((state) => {
+    const city = state.cities[cityId];
+    if (!city || city.ownerId !== 'F_PLAYER') return state;
+    const trimmed = newName.trim().slice(0, 20);
+    if (!trimmed) return state;
+    return { cities: { ...state.cities, [cityId]: { ...city, name: trimmed } } };
+  }),
 
   updatePolicy: (factionId, updates) => set((state) => {
     const faction = state.factions[factionId];

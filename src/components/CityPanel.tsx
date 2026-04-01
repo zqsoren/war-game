@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useWorldStore } from '../store/WorldStore';
 
 export default function CityPanel() {
@@ -10,6 +11,10 @@ export default function CityPanel() {
   const setShowDeployModal = useWorldStore(state => state.setShowDeployModal);
   const setTransferTarget = useWorldStore(state => state.setTransferTarget);
   const setShowTransferModal = useWorldStore(state => state.setShowTransferModal);
+  const renameCity = useWorldStore(state => state.renameCity);
+
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [renameValue, setRenameValue] = useState('');
 
   if (!selectedCityId || !cities[selectedCityId]) {
     return (
@@ -45,13 +50,49 @@ export default function CityPanel() {
   const playerFaction = factions['F_PLAYER'];
   const warStatus = owner && !isPlayerCity && playerFaction?.atWarWith.includes(owner.id);
 
+  const handleStartRename = () => {
+    setRenameValue(city.name);
+    setIsRenaming(true);
+  };
+
+  const handleConfirmRename = () => {
+    if (renameValue.trim()) {
+      renameCity(selectedCityId, renameValue);
+    }
+    setIsRenaming(false);
+  };
+
   return (
     <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '14px', overflowY: 'auto' }}>
       {/* 标题 */}
       <div className="ministry-header" style={{ paddingBottom: '10px' }}>
-        <span style={{ fontSize: '20px', letterSpacing: '2px', color: owner?.color || '#888' }}>
-          {city.name}
-        </span>
+        {isRenaming ? (
+          <input
+            autoFocus
+            value={renameValue}
+            onChange={e => setRenameValue(e.target.value)}
+            onBlur={handleConfirmRename}
+            onKeyDown={e => { if (e.key === 'Enter') handleConfirmRename(); if (e.key === 'Escape') setIsRenaming(false); }}
+            maxLength={20}
+            style={{
+              fontSize: '18px', letterSpacing: '2px', color: owner?.color || '#888',
+              background: 'rgba(0,0,0,0.4)', border: '1px solid var(--accent-gold)',
+              borderRadius: '4px', padding: '2px 8px', outline: 'none',
+              fontFamily: 'var(--font-family)', width: '140px'
+            }}
+          />
+        ) : (
+          <span style={{ fontSize: '20px', letterSpacing: '2px', color: owner?.color || '#888', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            {city.name}
+            {isPlayerCity && (
+              <button onClick={handleStartRename}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', color: 'var(--text-dim)', padding: '0 2px' }}
+                title="重命名城市">
+                ✏️
+              </button>
+            )}
+          </span>
+        )}
         <span style={{ fontSize: '13px', color: 'var(--text-dim)' }}>
           [{owner ? owner.name : '叛贼'}]
           {warStatus && <span style={{ color: 'var(--accent-red)', marginLeft: '6px' }}>⚔交战中</span>}
