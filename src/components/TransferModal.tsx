@@ -21,11 +21,13 @@ export default function TransferModal() {
   const targetCity = cities[transferTargetId];
   if (!targetCity) return null;
 
-  // 找相邻的己方城市
-  const sourceCities = targetCity.adjacencies
-    .map(id => cities[id])
-    .filter(c => c && c.ownerId === 'F_PLAYER' && c.terrain !== 'water' && c.troops > 0 && c.id !== transferTargetId)
-    .sort((a, b) => b.troops - a.troops);
+  // 找合法的外派城市（相邻城市 + 双方都有军镇的城市）
+  const allPlayerCities = Object.values(cities).filter(c => c.ownerId === 'F_PLAYER' && c.terrain !== 'water' && c.id !== transferTargetId && c.troops > 0);
+  const sourceCities = allPlayerCities.filter(c => {
+    const isAdjacent = targetCity.adjacencies.includes(c.id);
+    const hasBaseConnection = targetCity.hasMilitaryBase && c.hasMilitaryBase;
+    return isAdjacent || hasBaseConnection;
+  }).sort((a, b) => b.troops - a.troops);
 
   const handleClose = () => {
     setShowTransferModal(false);
@@ -103,7 +105,12 @@ export default function TransferModal() {
               return (
                 <div key={sc.id} className="deploy-city-row">
                   <div className="deploy-city-info">
-                    <span className="deploy-city-name">{sc.name}</span>
+                    <span className="deploy-city-name" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      {sc.name}
+                      {sc.hasMilitaryBase && targetCity.hasMilitaryBase && !targetCity.adjacencies.includes(sc.id) && (
+                        <span style={{ fontSize: '10px', background: 'var(--accent-gold)', color: '#000', padding: '0 4px', borderRadius: '4px' }}>军镇传送</span>
+                      )}
+                    </span>
                     <span className="deploy-city-meta">可调: <b>{sc.troops.toLocaleString()}</b></span>
                     <span className="deploy-city-meta">预计 <b>{travelSec}s</b></span>
                   </div>

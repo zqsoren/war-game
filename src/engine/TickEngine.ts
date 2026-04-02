@@ -283,6 +283,22 @@ export function advanceTick() {
       faction.relations[enemyId] = Math.max(0, (faction.relations[enemyId] ?? 50) - 3);
     });
 
+    // --- AI 军镇建设 ---
+    if (faction.id !== 'F_PLAYER' && faction.treasury >= 12000 && roll(30)) {
+      const capacity = Math.floor(myCities.length / 5);
+      const currentBases = myCities.filter(c => c.hasMilitaryBase).length;
+      if (currentBases < capacity) {
+        // 选择一个未建军镇的高人口或前线城市
+        const candidates = myCities.filter(c => !c.hasMilitaryBase).sort((a, b) => b.population - a.population);
+        if (candidates.length > 0) {
+          const target = candidates[0];
+          faction.treasury -= 8000;
+          target.hasMilitaryBase = true;
+          // 不强制写 log，以免 AI 建军镇刷屏
+        }
+      }
+    }
+
     // ========== 军事行为（基于亲密度） ==========
     if (faction.atWarWith.length > 0) {
       // 战争模式：集结 + 进攻
@@ -301,9 +317,17 @@ export function advanceTick() {
           if (borderCities.length === 0) return;
           const transferAmount = Math.floor(inland.troops * 0.3);
           if (transferAmount > 500) {
-            const target = borderCities[randomBetween(0, borderCities.length - 1)];
+            // 如果内陆有军镇，寻找前线有军镇的城池；若无，找相邻的
+            let eligibleTargets = borderCities;
+            if (inland.hasMilitaryBase) {
+              const baseTargets = borderCities.filter(c => c.hasMilitaryBase);
+              if (baseTargets.length > 0) eligibleTargets = baseTargets;
+            }
+            const target = eligibleTargets[randomBetween(0, eligibleTargets.length - 1)];
             inland.troops -= transferAmount;
-            target.troops += transferAmount;
+            
+            // 走正常调度逻辑，带行军时间
+            dispatchAIArmy(inland, target, transferAmount, faction.id, true);
           }
         });
 
@@ -391,7 +415,7 @@ export function advanceTick() {
 }
 
 // AI 派军辅助
-function dispatchAIArmy(from: City, to: City, troops: number, ownerId: string) {
+function dispatchAIArmy(from: City, to: City, troops: number, ownerId: string, isTransfer: boolean = false) {
   const dist = Math.sqrt((from.x - to.x) ** 2 + (from.y - to.y) ** 2);
   const travelMs = Math.max(3000, (dist / 1.67) * 1000);
   const now = Date.now();
@@ -401,7 +425,7 @@ function dispatchAIArmy(from: City, to: City, troops: number, ownerId: string) {
       fromCityId: from.id, toCityId: to.id,
       ownerId, troops,
       departTime: now, arriveTime: now + travelMs,
-      isPlayerOrder: false, isTransfer: false
+      isPlayerOrder: false, isTransfer
     }]
   }));
 }

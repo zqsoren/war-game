@@ -12,6 +12,7 @@ export default function CityPanel() {
   const setTransferTarget = useWorldStore(state => state.setTransferTarget);
   const setShowTransferModal = useWorldStore(state => state.setShowTransferModal);
   const renameCity = useWorldStore(state => state.renameCity);
+  const buildMilitaryBase = useWorldStore(state => state.buildMilitaryBase);
 
   const [isRenaming, setIsRenaming] = useState(false);
   const [renameValue, setRenameValue] = useState('');
@@ -42,9 +43,21 @@ export default function CityPanel() {
   const isAttackable = !isPlayerCity && city.ownerId !== 'F_PLAYER' &&
     city.adjacencies.some(adjId => cities[adjId]?.ownerId === 'F_PLAYER');
 
-  // 是否可调兵到此城：己方城市，且有相邻的己方城市
-  const canReceiveTransfer = isPlayerCity &&
-    city.adjacencies.some(adjId => cities[adjId]?.ownerId === 'F_PLAYER' && cities[adjId]?.troops > 0);
+  // 自己拥有的城市列表
+  const playerOwnedCities = Object.values(cities).filter(c => c.ownerId === 'F_PLAYER');
+
+  // 是否可调兵到此城
+  let canReceiveTransfer = false;
+  if (isPlayerCity) {
+    const hasAdjSource = city.adjacencies.some(adjId => cities[adjId]?.ownerId === 'F_PLAYER' && cities[adjId]?.troops > 0);
+    const hasBaseSource = city.hasMilitaryBase && playerOwnedCities.some(c => c.id !== city.id && c.hasMilitaryBase && c.troops > 0);
+    canReceiveTransfer = Boolean(hasAdjSource || hasBaseSource);
+  }
+
+  // 军镇名额计算
+  const capacity = Math.floor(playerOwnedCities.length / 5);
+  const currentBases = playerOwnedCities.filter(c => c.hasMilitaryBase).length;
+  const canBuildBase = Boolean(isPlayerCity && !city.hasMilitaryBase && (owner?.treasury ?? 0) >= 8000 && currentBases < capacity);
 
   // 战争状态
   const playerFaction = factions['F_PLAYER'];
@@ -92,6 +105,9 @@ export default function CityPanel() {
               </button>
             )}
           </span>
+        )}
+        {city.hasMilitaryBase && (
+          <span style={{ fontSize: '13px', color: 'var(--accent-gold)', marginLeft: '6px' }} title="军镇：可与国内其他军镇无视距离直接调兵">🏕️军镇</span>
         )}
         <span style={{ fontSize: '13px', color: 'var(--text-dim)' }}>
           [{owner ? owner.name : '叛贼'}]
@@ -159,6 +175,16 @@ export default function CityPanel() {
       {isPlayerCity && (
         <div style={{ borderTop: '1px solid var(--panel-border)', paddingTop: '10px', display: 'flex', flexDirection: 'column', gap: '5px' }}>
           <div style={{ fontSize: '13px', marginBottom: '2px', color: 'var(--accent-gold)' }}>行辕指令</div>
+          {/* 军镇建设按钮 */}
+          {!city.hasMilitaryBase && (
+            <button className="btn btn-primary"
+              onClick={() => buildMilitaryBase(city.id)}
+              disabled={!canBuildBase}
+              style={{ fontSize: '12px', borderColor: 'var(--accent-gold)' }}
+              title={currentBases >= capacity ? `军镇名额已满 (${currentBases}/${capacity})` : (owner?.treasury ?? 0) < 8000 ? '国库资金不足8000' : '花费8000金建设军镇'}>
+              🛠️ 设为军镇 (8000金)
+            </button>
+          )}
           <button className="btn btn-primary" onClick={() => cityAction(city.id, 'relief')} style={{ fontSize: '12px' }}>
             开仓赈灾 (2000金/+30民心)
           </button>

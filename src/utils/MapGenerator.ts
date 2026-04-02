@@ -7,15 +7,15 @@ const HEIGHT = 800;
 const POINT_COUNT = 300; // 较多的点以产生细致的地块
 
 const FACTIONS = [
-  { id: 'F_PLAYER', name: '玩家(大楚)', color: '#FF3333', isPlayer: true, targetCount: 10 },
-  { id: 'F_AI1', name: '赵', color: '#3355FF', isPlayer: false, targetCount: 35 },
-  { id: 'F_AI2', name: '宋', color: '#11AA66', isPlayer: false, targetCount: 25 },
-  { id: 'F_AI3', name: '钱', color: '#DDAA11', isPlayer: false, targetCount: 40 },
-  { id: 'F_AI4', name: '明', color: '#AA33AA', isPlayer: false, targetCount: 30 },
-  { id: 'F_AI5', name: '越', color: '#33AADD', isPlayer: false, targetCount: 8 },
-  { id: 'F_AI6', name: '秦', color: '#222222', isPlayer: false, targetCount: 35 },
-  { id: 'F_AI7', name: '齐', color: '#FF8833', isPlayer: false, targetCount: 20 },
-  { id: 'F_AI8', name: '燕', color: '#888888', isPlayer: false, targetCount: 5 },
+  { id: 'F_PLAYER', name: '玩家(大楚)', color: '#d16b6b', isPlayer: true, targetCount: 10 },
+  { id: 'F_AI1', name: '赵', color: '#6b84d1', isPlayer: false, targetCount: 35 },
+  { id: 'F_AI2', name: '宋', color: '#7ab88b', isPlayer: false, targetCount: 25 },
+  { id: 'F_AI3', name: '钱', color: '#dcb56a', isPlayer: false, targetCount: 40 },
+  { id: 'F_AI4', name: '明', color: '#b185b3', isPlayer: false, targetCount: 30 },
+  { id: 'F_AI5', name: '越', color: '#6ab7b8', isPlayer: false, targetCount: 8 },
+  { id: 'F_AI6', name: '秦', color: '#5a5c61', isPlayer: false, targetCount: 35 },
+  { id: 'F_AI7', name: '齐', color: '#d98d5b', isPlayer: false, targetCount: 20 },
+  { id: 'F_AI8', name: '燕', color: '#9e9e9e', isPlayer: false, targetCount: 5 },
 ];
 
 function getRandomInt(min: number, max: number) {

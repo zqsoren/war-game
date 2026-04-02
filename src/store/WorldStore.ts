@@ -57,6 +57,7 @@ export interface City {
   loyalty: number;
   funds: number;
   troopRecoveryRate: number;
+  hasMilitaryBase?: boolean; // 是否建有军镇
 }
 
 export interface MarchingArmy {
@@ -123,6 +124,7 @@ export interface WorldState {
   renameCity: (cityId: string, newName: string) => void;
   updatePolicy: (factionId: string, updates: Partial<Faction>) => void;
   cityAction: (cityId: string, actionType: 'relief' | 'repair' | 'forceDraft') => void;
+  buildMilitaryBase: (cityId: string) => void;
 
   setAttackTarget: (cityId: string | null) => void;
   setShowDeployModal: (show: boolean) => void;
@@ -438,6 +440,26 @@ export const useWorldStore = create<WorldState>((set, get) => ({
       message: `${accepted ? '✅' : '❌'} 向 ${target.name} ${typeNames[type]}${accepted ? '成功' : '被拒'}。${delta > 0 ? `亲密+${delta}` : delta < 0 ? `亲密${delta}` : ''}`,
       type: 'diplomacy'
     });
+  },
+
+  buildMilitaryBase: (cityId) => {
+    const state = get();
+    const city = state.cities[cityId];
+    if (!city || !city.ownerId || city.hasMilitaryBase) return;
+    const faction = state.factions[city.ownerId];
+    if (!faction || faction.treasury < 8000) return;
+
+    // 检查名额限制（国家总城池数 / 5）
+    const ownedCities = Object.values(state.cities).filter(c => c.ownerId === faction.id);
+    const capacity = Math.floor(ownedCities.length / 5);
+    const currentBases = ownedCities.filter(c => c.hasMilitaryBase).length;
+    if (currentBases >= capacity) return;
+
+    set(s => ({
+      factions: { ...s.factions, [faction.id]: { ...s.factions[faction.id], treasury: faction.treasury - 8000 } },
+      cities: { ...s.cities, [cityId]: { ...s.cities[cityId], hasMilitaryBase: true } },
+    }));
+    get().addLog({ eraYear: state.eraYear, eraMonth: state.eraMonth, message: `🛠️ ${faction.name} 在 ${city.name} 建成军镇。`, type: 'economy' });
   },
 
   // ======== 行军 ========

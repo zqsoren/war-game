@@ -1,17 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { useWorldStore } from '../store/WorldStore';
 
-// 降低饱和度的颜色转换：将颜色混合黑色使其变暗淡
-function desaturate(hex: string, amount: number = 0.45): string {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  const nr = Math.floor(r * amount);
-  const ng = Math.floor(g * amount);
-  const nb = Math.floor(b * amount);
-  return `rgb(${nr},${ng},${nb})`;
-}
-
 const TERRAIN_COLORS: Record<string, string> = {
   water: '#1a3a5c',
   sand: '#7a6e4d',
@@ -68,9 +57,9 @@ export default function MapSurface() {
             fillAttr = TERRAIN_COLORS[city.terrain] || '#354a35';
             if (city.ownerId && city.terrain !== 'water') opacityAttr = 0.9;
           } else {
-            // 势力视图：使用降饱和度的颜色
+            // 势力视图：直接使用莫兰迪配色
             if (city.terrain === 'water') fillAttr = TERRAIN_COLORS.water;
-            else if (city.ownerId && factions[city.ownerId]) fillAttr = desaturate(factions[city.ownerId].color, 0.4);
+            else if (city.ownerId && factions[city.ownerId]) fillAttr = factions[city.ownerId].color;
             else fillAttr = '#222222';
           }
 
@@ -111,6 +100,11 @@ export default function MapSurface() {
                   textAnchor="middle" fontWeight={isSelected ? 'bold' : 'normal'}
                   stroke="rgba(0,0,0,0.6)" strokeWidth={isSelected ? 2.5 : 2} paintOrder="stroke">
                   {city.name}
+                </text>
+              )}
+              {city.hasMilitaryBase && (
+                <text x={city.x + 8} y={city.y + 4} fontSize={10} textAnchor="start" pointerEvents="none">
+                  🏕️
                 </text>
               )}
             </g>
