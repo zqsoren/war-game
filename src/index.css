@@ -141,14 +141,9 @@ body, html {
 }
 
 .map-polygon.military-base {
-  stroke: var(--accent-gold);
-  stroke-width: 2px;
-  animation: militaryGlow 2s infinite alternate ease-in-out;
-}
-
-@keyframes militaryGlow {
-  0% { filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.4)) brightness(1.0); stroke-width: 1px; }
-  100% { filter: drop-shadow(0 0 12px rgba(255, 215, 0, 1)) brightness(1.25); stroke-width: 3px; }
+  stroke: #ffffff;
+  stroke-width: 2.5px;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9)) brightness(1.15);
 }
 
 .map-polygon.attackable { cursor: pointer; }
