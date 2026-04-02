@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>军镇 UI 样式备选方案</title>
+    <style>
+        body { background: #1a1a1a; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 40px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; width: 100%; max-width: 1200px; }
+        .card { background: #2a2a2a; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; border: 1px solid #444; }
+        .svg-container { width: 150px; height: 150px; background: #354a35; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; }
+        .desc { font-size: 14px; color: #bbb; line-height: 1.5; }
+        h3 { margin: 0 0 10px 0; color: #ffd700; }
+        
+        /* 样式动画定义 */
+        @keyframes pulseGlow { 0% { filter: drop-shadow(0 0 2px #ffd700); transform: scale(1); } 50% { filter: drop-shadow(0 0 12px #ffd700); transform: scale(1.1); } 100% { filter: drop-shadow(0 0 2px #ffd700); transform: scale(1); } }
+        @keyframes spinSlow { 100% { transform: rotate(360deg); } }
+        @keyframes radarSweep { 0% { opacity: 0.8; transform: scale(0.8); } 100% { opacity: 0; transform: scale(2.5); } }
+    </style>
+</head>
+<body>
+
+    <h2>挑选您喜欢的军镇 UI 样式</h2>
+    <p style="color: #888; margin-bottom: 40px;">背景模拟地图版块（大楚色调）。居中的是城池节点。</p>
+
+    <div class="grid">
+
+        <!-- 方案 1：金色星芒呼吸灯 -->
+        <div class="card">
+            <h3>方案 1. 星辉流转</h3>
+            <div class="svg-container" style="background: #d16b6b;">
+                <svg width="100" height="100" viewBox="-50 -50 100 100">
+                    <circle cx="0" cy="0" r="15" fill="#FFD700" opacity="0.3">
+                        <animate attributeName="r" values="15;30;15" dur="2s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0.3;0;0.3" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                    <path class="star" d="M0 -15 L4 -4 L15 0 L4 4 L0 15 L-4 4 L-15 0 L-4 -4 Z" fill="#FFD700" style="animation: pulseGlow 2s infinite ease-in-out;" />
+                    <circle cx="0" cy="0" r="4" fill="#fff" />
+                </svg>
+            </div>
+            <div class="desc">极简华丽。将普通的圆点替换为星芒阵，外围带有向外扩散的金色雷达呼吸光晕。</div>
+        </div>
+
+        <!-- 方案 2：威严城廓双轨 -->
+        <div class="card">
+            <h3>方案 2. 铁血重城</h3>
+            <div class="svg-container" style="background: #d16b6b;">
+                <svg width="100" height="100" viewBox="-50 -50 100 100">
+                    <!-- 外边框 -->
+                    <rect x="-18" y="-18" width="36" height="36" rx="4" fill="none" stroke="#FFD700" stroke-width="2" stroke-dasharray="8 4">
+                        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="10s" repeatCount="indefinite" />
+                    </rect>
+                    <!-- 内盾牌 -->
+                    <path d="M-10 -12 L10 -12 L10 2 Q0 15 -10 2 Z" fill="#FFD700" opacity="0.8" />
+                    <circle cx="0" cy="-2" r="3" fill="#1a1a1a" />
+                </svg>
+            </div>
+            <div class="desc">稳重有压迫感。内圈是金色的坚固盾形/城门，外围有一个缓慢旋转的虚线护城光轨。</div>
+        </div>
+
+        <!-- 方案 3：古典六边形与角标 -->
+        <div class="card">
+            <h3>方案 3. 六芒连营</h3>
+            <div class="svg-container" style="background: #d16b6b;">
+                <svg width="100" height="100" viewBox="-50 -50 100 100">
+                    <!-- 六边形 -->
+                    <polygon points="0,-16 14,-8 14,8 0,16 -14,8 -14,-8" fill="#1a1a1a" stroke="#FFD700" stroke-width="3" />
+                    <circle cx="0" cy="0" r="6" fill="#FFD700" />
+                    <!-- 四角加固 -->
+                    <circle cx="-14" cy="-8" r="2" fill="#fff" />
+                    <circle cx="14" cy="-8" r="2" fill="#fff" />
+                    <circle cx="-14" cy="8" r="2" fill="#fff" />
+                    <circle cx="14" cy="8" r="2" fill="#fff" />
+                </svg>
+            </div>
+            <div class="desc">阵法感强烈。不再使用圆点，而是用厚重的黑金六芒星堡垒替代，体现战略要地的质感，无花哨动画。</div>
+        </div>
+
+        <!-- 方案 4：烽火台图腾 -->
+        <div class="card">
+            <h3>方案 4. 古韵烽台</h3>
+            <div class="svg-container" style="background: #d16b6b;">
+                <svg width="100" height="100" viewBox="-50 -50 100 100" style="filter: drop-shadow(0 4px 4px rgba(0,0,0,0.5));">
+                    <path d="M-12 10 L12 10 L8 -2 L12 -2 L12 -6 L-12 -6 L-12 -2 L-8 -2 Z" fill="#FFD700" />
+                    <!-- 城墙雉堞 -->
+                    <rect x="-11" y="-12" width="4" height="6" fill="#FFD700" />
+                    <rect x="-2" y="-12" width="4" height="6" fill="#FFD700" />
+                    <rect x="7" y="-12" width="4" height="6" fill="#FFD700" />
+                    <!-- 烽火 -->
+                    <path d="M-2 -15 Q0 -25 4 -12" stroke="#ff4444" stroke-width="2" fill="none" class="fire">
+                        <animate attributeName="d" values="M-2 -15 Q0 -25 4 -12; M-2 -15 Q-4 -20 2 -12; M-2 -15 Q0 -25 4 -12" dur="0.8s" repeatCount="indefinite" />
+                    </path>
+                </svg>
+            </div>
+            <div class="desc">代入感拉满。直接绘制一个带有动态燃烧烽火的金色城墙关隘图标，尺寸明显大于普通城市。</div>
+        </div>
+
+        <!-- 方案 5：悬浮双全息阵 -->
+        <div class="card">
+            <h3>方案 5. 罗盘大阵</h3>
+            <div class="svg-container" style="background: #d16b6b;">
+                <svg width="100" height="100" viewBox="-50 -50 100 100">
+                    <circle cx="0" cy="0" r="5" fill="#FFD700" />
+                    <circle cx="0" cy="0" r="14" fill="none" stroke="#FFD700" stroke-width="1.5" stroke-dasharray="2 6">
+                        <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="8s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="0" cy="0" r="22" fill="none" stroke="rgba(255, 215, 0, 0.4)" stroke-width="2" stroke-dasharray="15 10">
+                        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="15s" repeatCount="indefinite" />
+                    </circle>
+                    <!-- 方向针 -->
+                    <path d="M0 -22 L0 -26 M0 22 L0 26 M-22 0 L-26 0 M22 0 L26 0" stroke="#FFD700" stroke-width="2" />
+                </svg>
+            </div>
+            <div class="desc">科幻与古风结合，复杂精密。带有逆向与正向旋转的多层光环法阵，面积宽广，体现“八方输送”的枢纽特性。</div>
+        </div>
+
+    </div>
+
+</body>
+</html>

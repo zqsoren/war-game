@@ -69,7 +69,7 @@ export default function MapSurface() {
           return (
             <path
               key={city.id}
-              className={`map-polygon ${isSelected ? 'selected' : ''} ${canAttack ? 'attackable' : ''}`}
+              className={`map-polygon ${isSelected ? 'selected' : ''} ${canAttack ? 'attackable' : ''} ${city.hasMilitaryBase ? 'military-base' : ''}`}
               d={generatePathString(city.polygon)}
               fill={fillAttr}
               fillOpacity={opacityAttr}
